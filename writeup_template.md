@@ -60,7 +60,7 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 
 ![alt text][image1]
 
-As from above visualization, we can clearly state that the data is highly unbalanced which can make our model more biased towards the classes with more number of images e.g. class 40, 13 etc.
+As from above visualization, we can clearly state that the data is highly unbalanced which can make our model more biased towards the classes with more number of images e.g. class 1, 2, 38 etc.
 
 ![alt text][image1.1]
 
@@ -78,21 +78,23 @@ Here is an example of a traffic sign image before and after grayscaling.
 
 As a last step, I normalized the image data because as we know neural networks learn its weights by adding gradient error vectors (multiplied by learning rate) computed from backpropagation to various weight matrices throughout the network as training examples are passed through.
 
-If we didn't scale our feature then range of distribution of features values for each feature will likely to be very different. So, weight compensating for one feature may cause undercompensating the other. This can make our loss function in oscilliating state. 
+If we didn't scale our feature then range of distribution of features values for each feature will likely to be very different. So, weight compensating for one feature may cause undercompensating the other. This can put our loss function in oscilliating state while training. 
+
+I also did histogram equalization to increase the contrast of the low contrast images.
+
+![alt text][image3]
 
 I decided to generate additional data because of unbalanced data. As we visualized earlier some of the classes has less than 400 images, and some have more than 1500 which can make our model biased.
 
-To add more data to the the data set, I used the techniques resampling and flipping because some of the images are same after the flipping which can be benficial for us.
+To add more data to the the data set, I did resampling of the data and flipped some of the classes. I used flipping because some of the images are almost same after the flipping.
 
 Here is an example of an original image and an augmented image:
 
-![alt text][image3]
 ![alt text][image3.1]
 
 The difference between the original data set and the augmented data set is the following
 
-In original training dataset, we have 32799 image but after data augmentation we has more than 107500 images in our dataset i.e. 20 times of the original dataset.
-
+In original training dataset, we have 32799 image but after data augmentation we have 107500 images in our dataset i.e. more than 3 times of the original dataset.
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
@@ -120,7 +122,7 @@ My final model consisted of the following layers:
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 **Optimizer:** 
-To train the model, I used Adam optimizer s it converges fast, and the learning speed of the model is quiet fast and efficient. It also rectifies the problem of other learning algorithms like vanishing learning rate, slow convergence, and High variance in the parameters updates.
+To train the model, I used Adam optimizer as it converges fast, and the learning speed of the model is quiet fast and efficient. It also rectifies the problem of other learning algorithms like vanishing learning rate, slow convergence, and high variance in the parameters updates.
 
 **Batch Size and number of epochs:**
 Generally the batch size of 32, 64, 128, 256, 512, and 1024 (i.e. we usually choose batch size to be the power of 2) are used in neural networks. After checking on different batch sizes and number of epochs, I came up with these findings
@@ -134,10 +136,10 @@ Generally the batch size of 32, 64, 128, 256, 512, and 1024 (i.e. we usually cho
 | 512           	 | 10         		|  90.6%            |
 | 1024               | 10        		|  85%              |
 
-As from the above findings we can see that, batch size of 128 and 32 with 10 number of episode gives me the best result. I choose the batch size of 128 because of fewer operations which will increase my training speed.
+As from the above findings we can see that, batch size of 128 and 32 with 10 number of episode gives me the best result. I choose the batch size of 128 over 32 because of the training speed. As the batch size increases, we have fewer number of the iterations.
 
 **Learning Rate:**
-I used the learning rate of 0.0005. As it works better for my model.
+I used the learning rate of 0.0005 because it works better for my model.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
@@ -149,7 +151,7 @@ My final model results were:
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
   
-  I started with the architecture which has three convolutional layer and three fully connected layer. Reason behind choosing this architecture was that it has more layer so, it will perform well. But things didn't go as it seems. The extra layer overfits the data instead of extracting the feature.
+  I started with the architecture which has three convolutional layer and three fully connected layer. Reason behind choosing this architecture was that it has more layer so, I think it will perform well because an extra layer in network will help to give the more information about the data. But things didn't go as it seems. The extra layer overfits the data instead of extracting the feature.
 
 * What were some problems with the initial architecture? 
   
@@ -157,7 +159,7 @@ If an iterative approach was chosen:
 
 * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
 
-  I adjusted the architecture by removing one layer of the convolution which were cauing the overfitting. I also added the dropout in fully connected layers. Adding the dropout also helps to remove the overfitting.
+  I adjusted the architecture by removing one layer of the convolution which were cauing the overfitting. I also added the dropout in fully connected layers. Adding the dropout also helps to remove the overfitting. I also increased the depth of the convolution layer filter to extract the more features from the images.
 
 * Which parameters were tuned? How were they adjusted and why?
 
@@ -167,9 +169,9 @@ If an iterative approach was chosen:
 
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
     
-  Convolution layer is good design choices for the problems where we have to classify the images. It's because convolutional network extract the small feautes from the images like edges, lines, and them combined them to extract more advance feature like circles, letters, signs etc. As traffic sign classifier is the similar problem which makes convolutional layer best fit for it. 
+  Convolution layer is good design choices for the problems where we have to classify the images. It's because convolutional network extract the small features from the images like edges, lines, and them combined them to extract more advance feature like circles, letters, signs etc. As traffic sign classifier is the similar problem which makes convolutional layer network best fit for it. 
   
-  Dropout layer prevent the overfitting which makes model more general.
+  Adding dropout layer also helps, as dropout layer prevent the overfitting which makes model more general.
 
 If a well known architecture was chosen:
 * What architecture was chosen?
@@ -179,10 +181,10 @@ If a well known architecture was chosen:
 * Why did you believe it would be relevant to the traffic sign application?
 
   I believe it would be relevant to the traffice sign application because it contain two convolutional layer which works well to extract the features from the traffic sign images, and it also contain dropout layer which prevent the overfitting.
-  
+
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
   
-  Model gives the 99.8% accuracy on test set, 95% accuracy on validation set, and 93.3% accuracy on the test images. I think it's good model because it's performing well on the test set too. And the difference b/w the accuracies of the train and validation set is not too high which prove that our model is also not overfitting the data. Having a test accuracy greater than 93% is good enough.
+  Model gives the 99.8% accuracy on test set, 95% accuracy on validation set, and 93.3% accuracy on the test images. I think it's good model because it's performing well on the test set too. And the difference b/w the accuracies of the train and validation set is not too high which prove that our model is also not overfitting the data. Having a test accuracy greater than 93% is also good.
  
 
 ### Test a Model on New Images
@@ -195,7 +197,7 @@ Here are five German traffic signs that I found on the web:
 ![alt text][image7] ![alt text][image8] ![alt text][image9]
 ![alt text][image10]
 
-The third, fifth, and seventh image might be difficult to classify because of the slight tilt towards the left side. Remaining images seems to classify easily as they do not have any noise.
+The third, fifth, and seventh image might be difficult to classify because of the slight tilt towards the left side. Remaining images seems to be classified easily as they do not have any noise.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
